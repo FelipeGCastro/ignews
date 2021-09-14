@@ -1,6 +1,7 @@
 import { GetStaticProps } from 'next'
 import Head from 'next/head';
 import { SubscribeButton } from '../components/SubscribeButton';
+import Logo from '../assets/logo.svg'
 import { stripe } from '../services/stripe';
 import styles from './home.module.scss'
 
@@ -19,15 +20,15 @@ export default function Home({ product }: HomeProps) {
     </Head>
     <main className={styles.contentContainer}>
       <section className={styles.hero}>
-        <span>Hey, welcome</span>
-        <h1>New about the <span>React</span> world.</h1>
+        <span>Olá, seja bem-vindo</span>
+        <h1>Aprenda e <br/><span>Ensine o caminho</span><br/> da verdade.</h1>
         <p>
-          Get access to all the publications <br />
-          <span>for {product.amount} month</span>
+          Tenha acesso a todo conteúdo <br />
+          <span>por apenas {product.amount} por mês </span>
         </p>
         <SubscribeButton priceId={product.priceId} />
       </section>
-      <img src="/images/avatar.svg" alt="Girl coding" />
+      <Logo/>
     </main>
     </>
     
@@ -35,12 +36,12 @@ export default function Home({ product }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const price = await stripe.prices.retrieve('price_1JYbj8Bg9OZ0JSBOGbLwHAzE')
+  const price = await stripe.prices.retrieve('price_1JZbkVBg9OZ0JSBOKwCwz23s')
   const product = {
     priceId: price.id,
-    amount: new Intl.NumberFormat('en-US', {
+    amount: new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'BRL'
     }).format(price.unit_amount / 100)
   }
   return {

@@ -37,7 +37,7 @@ export  function SubscribeButton({ priceId }: SubscriptionButtonProps) {
         type="button" 
         className={styles.subscribeButton}
         >
-            Subscribe Now 
+            Assine já 
         </button>
     )
 }

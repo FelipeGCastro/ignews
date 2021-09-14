@@ -6,26 +6,86 @@
     height: calc(100vh - 5rem);
 
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
 
+    svg {
+        flex: 1;
+      }
+
+      @-webkit-keyframes rotating {
+        from {
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+    
+ 
+      @keyframes rotating {
+        from {
+          -ms-transform: rotate(0deg);
+          -moz-transform: rotate(0deg);
+          -webkit-transform: rotate(0deg);
+          -o-transform: rotate(0deg);
+          transform: rotate(0deg);
+        }
+        to {
+          -ms-transform: rotate(360deg);
+          -moz-transform: rotate(360deg);
+          -webkit-transform: rotate(360deg);
+          -o-transform: rotate(360deg);
+          transform: rotate(360deg);
+        }
+      }
+
+      [data-name='thingsAround'] {
+        transform-origin: center;
+        -webkit-animation: rotating 180s linear infinite;
+        -moz-animation: rotating 180s linear infinite;
+        -ms-animation: rotating 180s linear infinite;
+        -o-animation: rotating 180s linear infinite;
+        animation: rotating 180s linear infinite;
+      }
+
+}
+@media(max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    svg {
+      order: 1;
+    }
+  }
+  .hero {
+    order: 2;
+  }
 }
 .hero {
+    flex: 1;
     max-width: 600px;
 
     > span {
         font-size: 1.5rem;
         font-weight: bold;
+        text-shadow: 1px 1px 2px rgba($color: #000000, $alpha: 0.4);
     }
 
     h1 {
-        font-size: 4.5rem;
-        line-height: 4.5rem;
+        font-size: 4rem;
+        line-height: 4rem;
         font-weight: 900;
         margin-top: 1.5rem;
-
+        text-shadow: 2px 2px 3px rgba($color: #000000, $alpha: 0.4);
         span {
-            color: var(--cyan-500)
+            color: var(--green-400)
         }
     }
 
@@ -33,10 +93,13 @@
         font-size: 1.5rem;
         line-height: 2.25rem;
         margin-top: 1.5rem;
+        text-shadow: 1px 1px 2px rgba($color: #000000, $alpha: 0.4);
 
         span {
-            color: var(--cyan-500);
+          color: var(--green-400);
             font-weight: bold;
+            text-shadow: none;
+            
         }
     }
 

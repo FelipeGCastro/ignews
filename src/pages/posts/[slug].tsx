@@ -5,28 +5,52 @@ import { RichText } from "prismic-dom"
 import { getPrismicClient } from "../../services/prismic"
 
 import styles from './post.module.scss'
+import { useState } from "react"
+import { PlayerContent } from "../../components/PlayerContent"
 
-interface PostProps {
-    post: {
+type ImageItem = {
+    imageUrl: string
+    imageAlt: string
+    primaryText: string
+    secondaryText: string
+}
+
+interface StoryProps {
+    story: {
         slug: string
         title: string
-        content: string
+        thumbUrl: string
+        gallery: ImageItem[]
         updatedAt: string
     }
 }
 
-export default function Post({ post }: PostProps ) {
+export default function Post({ story }: StoryProps ) {
+    const [slidePosition, setSlidePosition] = useState(0)
     return (
         <>
         <Head>
-            <title>{post.title} | Ignews</title>
+            <title>{story.title} | Ensine o Caminho</title>
         </Head>
         <main className={styles.container}>
-            <article className={styles.post}>
-                <h1>{post.title}</h1>
-                <time>{post.updatedAt}</time>
-                <div className={styles.postContent} dangerouslySetInnerHTML={{ __html: post.content}} />
-            </article>
+            
+                {slidePosition === 0 ? (
+                    <article className={styles.post}>
+                        <img src={story.thumbUrl}alt={story.title}/>
+                        <div>                            
+                            <h1>{story.title}</h1>
+                            <time>{story.updatedAt}</time>
+                        </div>
+                    </article>
+                ) : story.gallery.map((item, index) => (
+                    <PlayerContent 
+                    key={index.toString()}
+                    imageAlt={item.imageAlt}
+                    imageUrl={item.imageUrl}
+                    primaryText={item.primaryText}
+                    secondaryText={item.secondaryText}
+                    />) )
+                }
         </main>
 
         </>
@@ -45,20 +69,27 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
         }
     }
     const prismic = getPrismicClient(req)
-    const response = await prismic.getByUID('p', String(slug), {})
-
-    const post = {
+    const response = await prismic.getByUID('story', String(slug), {})
+   
+    const story = {
         slug,
         title: RichText.asText(response.data.title),
-        content: RichText.asHtml(response.data.content),
+        thumbUrl: response.data.thumbnail.url,
+        gallery: response.data.body[0].items?.map(item => ({
+            imageUrl: item.image.url,
+            imageAlt: RichText.asText(item.alt_text),
+            primaryText: RichText.asText(item.primary_text),
+            secondaryText: RichText.asText(item.secondary_text)
+        })),
         updatedAt: new Date(response.last_publication_date).toLocaleDateString('pt-BR', {
             day: '2-digit',
             month: 'long',
             year: 'numeric'
         })
     }
+    console.log(story)
     return {
-        props: { post }
+        props: { story }
     }
 
 }

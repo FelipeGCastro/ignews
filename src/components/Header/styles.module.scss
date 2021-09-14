@@ -1,6 +1,6 @@
 .headerContainer {
     height: 5rem;
-    border-bottom: 1px solid var(--gray-800);
+    border-bottom: 1px solid var(--white);
 }
 
 .headerContent {
@@ -22,7 +22,7 @@
             padding: 0 0.5rem;
             height: 5rem;
             line-height: 5rem;
-            color: var(--gray-300);
+            color: var(--white);
 
             transition: color 0.2s;
 
@@ -40,13 +40,13 @@
 
             &.active::after {
                 content: '';
-                height: 3px;
+                height: 5px;
                 border-radius: 3px 3px 0 0;
                 width: 100%;
                 position: absolute;
                 bottom: 1px;
                 left: 0;
-                background: var(--yellow-500);
+                background: var(--white);
             }
         }
     }

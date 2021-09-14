@@ -5,31 +5,33 @@ import Head from 'next/head'
 import { getPrismicClient } from '../../services/prismic'
 import styles from './styles.module.scss'
 import { RichText } from 'prismic-dom'
+import { useSession } from 'next-auth/client'
 
-type Post = {
+type Story = {
     slug: string
     title: string
-    excerpt: string
+    thumbUrl: string
     updatedAt: string
 }
-interface PostsProps {
-    posts: Post[]
+interface StoriesProps {
+    stories: Story[]
 }
 
-export default function Posts({ posts }: PostsProps) {
+export default function Posts({ stories }: StoriesProps) {
+    console.log(stories)
     return (
         <>
             <Head>
-                <title>Posts | Ignews</title>
+                <title>Posts | Ensine o Caminho</title>
             </Head>
             <main className={styles.container}>
                 <div className={styles.posts}>
-                    {posts.map(post => (
+                    {stories.map(post => (
                         <Link key={post.slug} href={`/posts/${post.slug}`}>
                             <a >
                                 <time>{post.updatedAt}</time>
                                 <strong>{post.title}</strong>
-                                <p>{post.excerpt}</p>
+                                <img src={post.thumbUrl} alt={post.title} />
                             </a>
                         </Link>
                     ))}
@@ -42,17 +44,17 @@ export default function Posts({ posts }: PostsProps) {
 export const getStaticProps: GetStaticProps = async () => {
     const prismic = getPrismicClient()
     const response = await prismic.query(
-        Prismic.predicates.at('document.type', 'p')
+        Prismic.predicates.at('document.type', 'story')
     , {
-        fetch: ['title', 'content'],
+        fetch: ['story.title', 'story.thumbnail'],
         pageSize: 100,
     })
-    const posts = response.results.map(post => {
+    const stories = response.results.map(story => {
         return {
-            slug: post.uid,
-            title: RichText.asText(post.data.title),
-            excerpt: post.data.content.find(content => content.type === 'paragraph')?.text ?? '',
-            updatedAt: new Date(post.last_publication_date).toLocaleDateString('pt-BR', {
+            slug: story.uid,
+            title: RichText.asText(story.data.title),
+            thumbUrl: story.data.thumbnail.url,
+            updatedAt: new Date(story.last_publication_date).toLocaleDateString('pt-BR', {
                 day: '2-digit',
                 month: 'long',
                 year: 'numeric'
@@ -61,6 +63,6 @@ export const getStaticProps: GetStaticProps = async () => {
         }
     })
     return {
-        props: { posts }
+        props: { stories }
     }
 }
